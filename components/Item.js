@@ -102,8 +102,10 @@ class Item extends Component {
                     height: this.state.height, backgroundColor: Colors.bc,
                     flex: 1, justifyContent: 'space-evenly', flexDirection: 'row'
                 }}>
-
-                    {this.days()}
+                    {
+                        this.state.expanded ?
+                        this.days() : null
+                    }
                 </Animated.View>
             </View>
         );
