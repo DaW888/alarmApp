@@ -12,7 +12,13 @@ class Alarms extends Component {
     }
 
     componentDidMount() {
-        this.getItems();
+        this.focus = this.props.navigation.addListener('didFocus', () => {
+            this.getItems();
+        })
+    }
+
+    componentWillUnmount() {
+        this.focus.remove();
     }
 
     getItems = () => {
@@ -31,10 +37,14 @@ class Alarms extends Component {
         });
     }
 
+    removeItem = () => {
+        this.getItems();
+    }
+
     renderItems = () => {
         if (this.state.items)
             return this.state.items.map(({id, time, turn, days}) => {
-                return <Item key={id} id={id} time={time} turn={turn} days={days}/>
+                return <Item key={id} id={id} time={time} turn={turn} days={days} remove={this.removeItem}/>
             });
         else return null;
     }
