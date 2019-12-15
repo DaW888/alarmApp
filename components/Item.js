@@ -1,22 +1,29 @@
-import React, { Component } from 'react';
-import { View, Text, StyleSheet, Switch, TouchableNativeFeedback, Animated, Vibration } from 'react-native';
-import { AntDesign, Ionicons } from '@expo/vector-icons';
+import React, {Component} from 'react';
+import {View, Text, StyleSheet, Switch, TouchableNativeFeedback, Animated, Vibration} from 'react-native';
+import {AntDesign, Ionicons} from '@expo/vector-icons';
 import Colors from '../constants/Colors';
 import Database from '../constants/Database';
+import {Audio} from 'expo-av';
 
 class Item extends Component {
+    constructor(props) {
+        super(props);
+        this.play();
+    }
+
+
     state = {
         switch: this.props.turn === 'true',
         height: new Animated.Value(0),
         expanded: false,
         arDays: [
-            { day: 'Pon', color: 'transparent' },
-            { day: 'Wt', color: 'transparent' },
-            { day: 'Sr', color: 'transparent' },
-            { day: 'Czw', color: 'transparent' },
-            { day: 'Pt', color: 'transparent' },
-            { day: 'Sob', color: 'transparent' },
-            { day: 'Nie', color: 'transparent' },
+            {day: 'Pon', color: 'transparent'},
+            {day: 'Wt', color: 'transparent'},
+            {day: 'Sr', color: 'transparent'},
+            {day: 'Czw', color: 'transparent'},
+            {day: 'Pt', color: 'transparent'},
+            {day: 'Sob', color: 'transparent'},
+            {day: 'Nie', color: 'transparent'},
         ],
         stringDay: [],
         hour: parseInt(this.props.time.split(":")[0]),
@@ -25,20 +32,48 @@ class Item extends Component {
 
     toValue = 40;
 
+    snd = new Audio.Sound();
+    play = async () => {
+        try {
+            await this.snd.loadAsync(require('../assets/audio/kobiety.mp3'));
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    start = true;
     interval = setInterval(() => {
-        if(this.state.switch) {
+        if (this.state.switch) {
+
             const date = new Date();
             const h = date.getHours();
             const m = date.getMinutes();
 
             if (h === this.state.hour && m === this.state.minute) {
                 Vibration.vibrate(500);
+
+                if (this.start) {
+                    this.snd.playAsync();
+                    this.start = false;
+                }
+
+            } else {
+                if (!this.start) {
+                    this.snd.pauseAsync();
+                    this.start = true;
+                }
+            }
+        } else {
+            if (!this.start) {
+                this.snd.pauseAsync();
+                this.start = true;
             }
         }
+
     }, 1000);
 
     switch = () => {
-        this.setState({ switch: !this.state.switch });
+        this.setState({switch: !this.state.switch});
     };
 
     expand = () => {
@@ -98,7 +133,7 @@ class Item extends Component {
     };
 
     days = () => {
-        return this.state.arDays.map(({ day, color }) => {
+        return this.state.arDays.map(({day, color}) => {
             return (
                 <TouchableNativeFeedback
                     key={day}
@@ -132,21 +167,21 @@ class Item extends Component {
         return (
             <View style={styles.cont}>
                 <View style={styles.row1}>
-                    <Text style={{ color: Colors.text, fontSize: 34 }}>{this.props.time}</Text>
-                    <Switch value={this.state.switch} onChange={this.switch} />
+                    <Text style={{color: Colors.text, fontSize: 34}}>{this.props.time}</Text>
+                    <Switch value={this.state.switch} onChange={this.switch}/>
                 </View>
                 <View style={styles.row2}>
                     <TouchableNativeFeedback
                         background={TouchableNativeFeedback.Ripple('rgba(255,255,255,1)', true)}
                         onPress={this.del}
                     >
-                        <AntDesign name="delete" size={32} color={Colors.accLight} />
+                        <AntDesign name="delete" size={32} color={Colors.accLight}/>
                     </TouchableNativeFeedback>
                     <TouchableNativeFeedback
                         background={TouchableNativeFeedback.Ripple('rgba(255,255,255,1)', true)}
                         onPress={this.expand}
                     >
-                        <Ionicons name="ios-arrow-down" size={32} color={Colors.main} />
+                        <Ionicons name="ios-arrow-down" size={32} color={Colors.main}/>
                     </TouchableNativeFeedback>
                 </View>
 
