@@ -19,9 +19,23 @@ class Item extends Component {
             { day: 'Nie', color: 'transparent' },
         ],
         stringDay: [],
+        hour: parseInt(this.props.time.split(":")[0]),
+        minute: parseInt(this.props.time.split(":")[1]),
     };
 
     toValue = 40;
+
+    interval = setInterval(() => {
+        if(this.state.switch) {
+            const date = new Date();
+            const h = date.getHours();
+            const m = date.getMinutes();
+
+            if (h === this.state.hour && m === this.state.minute) {
+                Vibration.vibrate(500);
+            }
+        }
+    }, 1000);
 
     switch = () => {
         this.setState({ switch: !this.state.switch });
