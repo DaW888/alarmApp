@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {View, Text, StyleSheet, ScrollView, Dimensions} from 'react-native';
 import CircleBt from "../components/CircleBt";
 import Colors from "../constants/Colors";
-import Items from "../components/Items";
 import Item from "../components/Item";
 import Database from "../constants/Database";
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Switch, TouchableNativeFeedback, Animated } from 'react-native';
+import { View, Text, StyleSheet, Switch, TouchableNativeFeedback, Animated, Vibration } from 'react-native';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import Colors from '../constants/Colors';
 import Database from '../constants/Database';
@@ -54,8 +54,7 @@ class Item extends Component {
     };
 
     dayChangeColor = (day, color) => {
-        // console.log(day, color);
-        // console.log(this.state.arDays);
+        Vibration.vibrate([0, 50, 20, 50]);
         let ind;
         this.state.arDays.find((el, id) => {
             if (el.day == day) {
